@@ -299,3 +299,8 @@
 #include "functions\Config\applyConfig.au3"
 #include "functions\Config\readConfig.au3"
 #include "functions\Config\saveConfig.au3"
+
+
+
+;MOD
+#include "Wightman__MOD\Functions_Wightman__MOD.au3"

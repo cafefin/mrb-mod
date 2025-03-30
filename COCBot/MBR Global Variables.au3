@@ -78,20 +78,20 @@ Global $g_iVILLAGE_OFFSET[3] = [0, 0, 1]
 ; <><><><><><><><><><><><><><><><><><>
 ; <><><><> debug flags <><><><>
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-Global $g_bDebugSetLog = False ; Verbose log messages, or extra log messages most everywhere
-Global $g_bDebugAndroid = False ; Debug Android
-Global $g_bDebugClick = False ; Debug Bot Clicks and when docked, display current mouse position and RGB color
-Global $g_bDebugFuncTime = False ; Log Function execution time (where implemented)
-Global $g_bDebugFuncCall = False ; Log Function call hierarchy (where implemented)
-Global $g_bDebugOcr = False ; Creates \Lib\Debug folder and collects OCR images of text capture plus creates OCR log file
-Global $g_bDebugImageSave = False ; Save images at key points to allow review/verify emulator window status
-Global $g_bDebugBuildingPos = False ; extra information about buildings detected while searching for base to attack
-Global $g_bDebugSetLogTrain = False ; verbose log information during troop training
-Global $g_iDebugWindowMessages = 0 ; 0=off, 1=most Window Messages, 2=all Window Messages
-Global $g_bDebugAndroidEmbedded = False ; Extra Android messages when using dock mode
-Global $g_bDebugGetLocation = False ;make a image of each structure detected with getlocation
+Global $g_bDebugSetLog = True ; Verbose log messages, or extra log messages most everywhere
+Global $g_bDebugAndroid = True ; Debug Android
+Global $g_bDebugClick = True ; Debug Bot Clicks and when docked, display current mouse position and RGB color
+Global $g_bDebugFuncTime = True ; Log Function execution time (where implemented)
+Global $g_bDebugFuncCall = True ; Log Function call hierarchy (where implemented)
+Global $g_bDebugOcr = True ; Creates \Lib\Debug folder and collects OCR images of text capture plus creates OCR log file
+Global $g_bDebugImageSave = True ; Save images at key points to allow review/verify emulator window status
+Global $g_bDebugBuildingPos = True ; extra information about buildings detected while searching for base to attack
+Global $g_bDebugSetLogTrain = True ; verbose log information during troop training
+Global $g_iDebugWindowMessages = 1 ; 0=off, 1=most Window Messages, 2=all Window Messages
+Global $g_bDebugAndroidEmbedded = True ; Extra Android messages when using dock mode
+Global $g_bDebugGetLocation = True ;make a image of each structure detected with getlocation
 Global $g_bDebugRedArea = False ; display red line data captured
-Global $g_hDebugAlwaysSaveFullScreenTimer = 0 ; __TimerInit() to save every screen capture at full size for 5 Minutes
+Global $g_hDebugAlwaysSaveFullScreenTimer = 1 ; __TimerInit() to save every screen capture at full size for 5 Minutes
 Global $g_bDebugSmartZap = False ; verbose logs for SmartZap users
 Global $g_bDebugAttackCSV = False ; Verbose log output of actual attack script plus bot actions
 Global $g_bDebugMakeIMGCSV = False ; Saves "clean" iamge and image with all drop points and detected buildings marked
@@ -102,7 +102,7 @@ Global $g_bDebugBetaVersion = StringInStr($g_sBotVersion, " b") > 0 ; not saved 
 ; <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
 ; <><><><> Capture image of every base during village search! <><><><>
-Global $g_bDebugVillageSearchImages = False ; will fill drive with huge number of images, enable "Delete Temp Files" to reduce lag created with too many images in folder
+Global $g_bDebugVillageSearchImages = True ; will fill drive with huge number of images, enable "Delete Temp Files" to reduce lag created with too many images in folder
 ; <><><><> Debug Dead Base search problems <><><><>
 Global $g_bDebugDeadBaseImage = False ; Enable collection of zombie base images where loot is above search filter, no dead base detected
 Global $g_aiSearchEnableDebugDeadBaseImage = 200 ; If $g_iDebugDeadBaseImage is 0 and more than these searches reached, set $g_iDebugDeadBaseImage = 1, 0 = disabled
@@ -437,7 +437,7 @@ Global $g_sProfileConfigPath = "" ; Path to the current config.ini being used in
 Global $g_sProfileBuildingStatsPath = "" ; Path to stats_chkweakbase.ini file for this profile
 Global $g_sProfileBuildingPath = "" ; Paths to building.ini file for this profile
 Global $g_sProfileClanGamesPath = "" ; Paths to clangames.ini file for this profile
-Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "" ; Paths to log/image/temp folders for this profile
+Global $g_sProfileLogsPath = "", $g_sProfileLootsPath = "", $g_sProfileTempPath = "", $g_sProfileTempDebugPath = "",  $g_sProfileTempDebugDOCRPath = "" ; Paths to log/image/temp folders for this profile
 Global $g_sProfileDonateCapturePath = "", $g_sProfileDonateCaptureWhitelistPath = "", $g_sProfileDonateCaptureBlacklistPath = "" ; Paths to donate related folders for this profile
 Global $g_sProfileSecondaryInputFileName = ""
 Global $g_sProfileSecondaryOutputFileName = ""
@@ -505,7 +505,17 @@ Global Const $g_sLibSQLitePath = $g_sLibPath & "\" & $g_sSQLiteLib
 Global $g_hLibMyBot = -1 ; handle to MyBot.run.dll library
 Global $g_hLibNTDLL = DllOpen("ntdll.dll") ; handle to ntdll.dll, DllClose($g_hLibNTDLL) not required
 Global $g_hLibUser32DLL = DllOpen("user32.dll") ; handle to user32.dll, DllClose($g_hLibUser32DLL) not required
-
+#Region - Dissociable.OCR - Team AIO Mod++
+Global Const $g_sDissociableOcrLib = "\ModLibs\Dissociable.OCR.dll"
+Global Const $g_sLibDissociableOcrPath = $g_sLibPath & "\" & $g_sDissociableOcrLib
+Global $g_hLibDissociableOcr = -1 ; Handle to Dissociable.OCR.dll
+Global $g_bDOCRDebugImages = True
+#EndRegion - Dissociable.OCR - Team AIO Mod++
+#Region - Dissociable.Matching - Team AIO Mod++
+Global Const $g_sDissociableMatchLib = "\ModLibs\Dissociable.Matching.dll"
+Global Const $g_sLibDissociableMatchPath = $g_sLibPath & "\" & $g_sDissociableMatchLib
+Global $g_hLibDissociableMatch = -1 ; Handle to Dissociable.Matching.dll
+Global $g_bDMatchingDebugImages = True
 Global Const $g_sLibIconPath = $g_sLibPath & "\MBRBOT.dll" ; icon library
 Global Const $g_sCSVAttacksPath = @ScriptDir & "\CSV\Attack"
 
@@ -2189,3 +2199,7 @@ Global $g_bCCPriorArmy[5] = ["Army", "Barracks", "Fortress", "Storage", "Factory
 Global $g_sAvailableAppBuilder = 0, $TimeDiffAppBuilder = 0, $g_bChkAppBuilder = 0
 ;Lab Assistant
 Global $g_sAvailableLabAssistant = 0, $TimeDiffLabAssistant = 0, $g_bChkLabAssistant = 0, $bLabAssistantUsedTime = 0
+
+Global $g_iconNewArmySection = @ScriptDir & "\COCBot\MOD\images\HomeVillage\armySection.bmp"
+Global $g_iconNewBuildSiegeMachineSection = @ScriptDir & "\COCBot\MOD\images\HomeVillage\BuildSiegeMachinesSection.bmp"
+Global $g_iconSpellSection = @ScriptDir & "\COCBot\MOD\images\HomeVillage\SpellSection.bmp"

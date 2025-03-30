@@ -38,15 +38,18 @@ Func getArmyTroopCapacity($bOpenArmyWindow = False, $bCloseArmyWindow = False, $
 	Local $tmpTotalCamp = 0
 	Local $tmpCurCamp = 0
 
+	Local $sNewArmyCamps = Number(getArmyCamps($aArmyCampSize[0], $aArmyCampSize[1]))
+	If $g_bDebugSetLogTrain Then SetLog("OCR $sNewArmyCamps11 = " & $sNewArmyCamps, $COLOR_DEBUG)
+
 	; Verify troop current and full capacity
-	$sArmyInfo = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], $bNeedCapture) ; OCR read army trained and total
+	$sArmyInfo = getArmyCamps($aArmyCampSize[0], $aArmyCampSize[1]) ; OCR read army trained and total
 
 	While $iCount < 100 ; 30 - 40 sec
 
 		$iCount += 1
 		If _Sleep($DELAYCHECKARMYCAMP5) Then Return ; Wait 250ms before reading again
 		ForceCaptureRegion()
-		$sArmyInfo = getArmyCampCap($aArmyCampSize[0], $aArmyCampSize[1], $bNeedCapture) ; OCR read army trained and total
+		$sArmyInfo = getArmyCamps($aArmyCampSize[0], $aArmyCampSize[1]) ; OCR read army trained and total
 		If $g_bDebugSetLogTrain Then SetLog("OCR $sArmyInfo = " & $sArmyInfo, $COLOR_DEBUG)
 		If StringInStr($sArmyInfo, "#", 0, 1) < 2 Then ContinueLoop ; In case the CC donations received msg are blocking, need to keep checking numbers till valid
 
